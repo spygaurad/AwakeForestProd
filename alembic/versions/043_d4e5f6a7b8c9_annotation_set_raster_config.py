@@ -49,9 +49,11 @@ def upgrade() -> None:
             WHERE id = p_annotation_set_id
               AND deleted_at IS NULL;
         $$;
-
-        GRANT EXECUTE ON FUNCTION get_raster_config_public(uuid) TO app_user;
     """)
+
+    op.execute(
+        "GRANT EXECUTE ON FUNCTION get_raster_config_public(uuid) TO app_user"
+    )
 
 
 def downgrade() -> None:
