@@ -25,6 +25,8 @@ class DatasetService:
         limit: int,
         offset: int,
         organization_id: UUID | None = None,
+        q: str | None = None,
+        status: str | None = None,
     ) -> tuple[Sequence[Dataset], int]:
         query = select(Dataset).where(Dataset.deleted_at.is_(None))
         count_query = select(func.count()).select_from(Dataset).where(Dataset.deleted_at.is_(None))
@@ -33,15 +35,26 @@ class DatasetService:
             query = query.where(Dataset.organization_id == organization_id)
             count_query = count_query.where(Dataset.organization_id == organization_id)
 
+        if status:
+            query = query.where(Dataset.status == status)
+            count_query = count_query.where(Dataset.status == status)
+
+        if q and q.strip():
+            pattern = f"%{q.strip()}%"
+            query = query.where(Dataset.name.ilike(pattern))
+            count_query = count_query.where(Dataset.name.ilike(pattern))
+
         rows = await self.db.scalars(
             query.order_by(Dataset.created_at.desc()).limit(limit).offset(offset)
         )
         total = await self.db.scalar(count_query)
         logger.debug(
-            "list_datasets organization_id=%s limit=%s offset=%s total=%s",
+            "list_datasets organization_id=%s limit=%s offset=%s q=%s status=%s total=%s",
             organization_id,
             limit,
             offset,
+            q,
+            status,
             total or 0,
         )
         return rows.all(), int(total or 0)

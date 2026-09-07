@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from geoops.api import router as embeddings_router
+
 from app.api.v1.endpoints import (
     adapters,
     annotation_classes,
@@ -65,3 +67,4 @@ api_router.include_router(feature_layers.router)
 api_router.include_router(automation.router)
 api_router.include_router(storage_download.router)
 api_router.include_router(events.router)
+api_router.include_router(embeddings_router)

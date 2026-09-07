@@ -23,3 +23,9 @@ combine_code.py.save
 !docs/assets/geotalos-example-workflow.png
 !docs/assets/geotalos-map-workspace.png
 !docs/assets/geotalos-temporal-workflow.png
+
+docs/*.md
+docs/*
+
+# Ignore NFS temporary network files
+.nfs*

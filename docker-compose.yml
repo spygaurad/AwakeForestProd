@@ -96,7 +96,10 @@ services:
   # ============================================================================
 
   app-db:
-    image: postgis/postgis:17-3.5
+    build:
+      context: ./infra/docker/app-db
+      dockerfile: Dockerfile
+    image: awakeforest/app-db-pgvector:17-3.5
     container_name: awakeforest-app-db
     restart: unless-stopped
     environment:
@@ -323,7 +326,7 @@ services:
       # (bucket.minio:9000), which is the opposite of what we want.
       # Path-style access is enforced client-side via AWS_S3_FORCE_PATH_STYLE=true.
     volumes:
-      - minio-data:/data
+      - ${HOME}/docker-data/minio-data:/data
     ports:
       - "${MINIO_API_PORT:-9000}:9000"     # S3 API
       - "${MINIO_CONSOLE_PORT:-9001}:9001" # Web console

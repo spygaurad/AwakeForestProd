@@ -14,3 +14,5 @@ from app.models.organization_member import OrganizationMember
 from app.models.project import Project
 from app.models.style import Style
 from app.models.user import User
+
+from geoops.models import Embedding

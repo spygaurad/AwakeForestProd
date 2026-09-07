@@ -101,6 +101,8 @@ async def _get_upload_job(
 @router.get("", response_model=DatasetListResponse)
 async def list_datasets(
     organization_id: UUID | None = Query(default=None),
+    q: str | None = Query(default=None, description="Case-insensitive substring match on dataset name"),
+    status: str | None = Query(default=None, description="Filter by dataset status (e.g. 'ready')"),
     limit: int = Depends(limit_param),
     offset: int = Depends(offset_param),
     org_id: UUID = Depends(require_org_role("org:viewer")),
@@ -114,6 +116,8 @@ async def list_datasets(
         limit=limit,
         offset=offset,
         organization_id=org_id,
+        q=q,
+        status=status,
     )
     return DatasetListResponse(items=items, total=total, limit=limit, offset=offset)
 
